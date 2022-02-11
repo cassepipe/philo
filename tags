@@ -1,0 +1,73 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	//
+$(NAME)	Makefile	/^$(NAME):		${OBJ\/OBJECTS}$/;"	t
+ANALYSER	Makefile	/^ANALYSER		=	#-fanalyzer$/;"	m
+CC	Makefile	/^CC	  		  	=	clang-12$/;"	m
+CFLAGS	Makefile	/^CFLAGS			=	-Wall -Wextra  -Iinc -g3 -Wno-format$/;"	m
+DIE_STR	inc/defines.h	/^#define DIE_STR /;"	d
+EAT_STR	inc/defines.h	/^#define EAT_STR /;"	d
+FORK1_STR	inc/defines.h	/^#define FORK1_STR /;"	d
+FORK2_STR	inc/defines.h	/^#define FORK2_STR /;"	d
+INC/HEADERS	Makefile	/^INC\/HEADERS		=	$/;"	m
+LIBS	Makefile	/^LIBS			=  -pthread$/;"	m
+MAIN_H	inc/main.h	/^#define MAIN_H$/;"	d
+NAME	Makefile	/^NAME			=	philo$/;"	m
+OBJ/OBJECTS	Makefile	/^OBJ\/OBJECTS		=	$(patsubst src\/%.c, obj\/%.o, $(SOURCES))$/;"	m
+PRINT_PHILO_H	inc/print_philo.h	/^#define PRINT_PHILO_H$/;"	d
+ROUTINES_H	inc/routines.h	/^#define ROUTINES_H$/;"	d
+SANITIZER	Makefile	/^SANITIZER		=	#-fsanitize=address$/;"	m
+SLEEP_STR	inc/defines.h	/^#define SLEEP_STR /;"	d
+SOURCES	Makefile	/^SOURCES			=  $(wildcard src\/*.c)	$/;"	m
+THINK_STR	inc/defines.h	/^#define THINK_STR /;"	d
+TIME_H	inc/time.h	/^#define TIME_H$/;"	d
+T_PHILO_H	inc/t_philo.h	/^#define T_PHILO_H$/;"	d
+T_TIME_INFO_H	inc/t_time_info.h	/^#define T_TIME_INFO_H$/;"	d
+ULONG_REPR_H	inc/ulong_repr.h	/^#define ULONG_REPR_H$/;"	d
+USLEEP_SPLIT	src/time.c	/^#define USLEEP_SPLIT	/;"	d	file:
+all	Makefile	/^all:			$(NAME)$/;"	t
+check_death	src/main.c	/^void	check_death(bool dead, pthread_mutex_t *death_mtx)$/;"	f	typeref:typename:void
+clean	Makefile	/^clean:			$/;"	t
+dead	inc/t_philo.h	/^	bool			dead;$/;"	m	struct:s_philo	typeref:typename:bool
+death_mtx	inc/t_philo.h	/^	pthread_mutex_t *death_mtx;$/;"	m	struct:s_philo	typeref:typename:pthread_mutex_t *
+eat	routines.c	/^void	eat(t_philo *philo)$/;"	f	typeref:typename:void
+eat	src/routines.c	/^void	eat(t_philo *philo)$/;"	f	typeref:typename:void
+fclean	Makefile	/^fclean:			clean$/;"	t
+get_time_info	src/time.c	/^t_time_info	get_time_info(void)$/;"	f	typeref:typename:t_time_info
+gettimeofday_in_ms	src/time.c	/^long	gettimeofday_in_ms()$/;"	f	typeref:typename:long
+id	inc/t_philo.h	/^	int				id;$/;"	m	struct:s_philo	typeref:typename:int
+init_all_philo	src/main.c	/^void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *mutexes, bool *start_u/;"	f	typeref:typename:void
+init_philo	src/main.c	/^t_philo	init_philo(int id, bool *start, pthread_mutex_t *death_mtx, pthread_mutex_t *left_fork, /;"	f	typeref:typename:t_philo
+left_fork	inc/t_philo.h	/^	pthread_mutex_t *left_fork;$/;"	m	struct:s_philo	typeref:typename:pthread_mutex_t *
+main	src/main.c	/^int main(int ac, char **av)$/;"	f	typeref:typename:int
+main	ulong_repr/main.c	/^int main(int ac, char **av)$/;"	f	typeref:typename:int
+obj	Makefile	/^obj:			$/;"	t
+obj/%.o	Makefile	/^obj\/%.o:		src\/%.c	${INC\/HEADERS} Makefile | obj$/;"	t
+print_philo	src/print_philo.c	/^void	print_philo(const t_philo *philo, const char *action, int act_sz)$/;"	f	typeref:typename:void
+re	Makefile	/^re:				fclean all$/;"	t
+right_fork	inc/t_philo.h	/^	pthread_mutex_t *right_fork;$/;"	m	struct:s_philo	typeref:typename:pthread_mutex_t *
+routine	routines.c	/^void	*routine(void *arg)$/;"	f	typeref:typename:void *
+routine	src/routines.c	/^void	*routine(void *arg)$/;"	f	typeref:typename:void *
+s_philo	inc/t_philo.h	/^typedef struct s_philo {$/;"	s
+s_time_info	inc/t_time_info.h	/^typedef struct s_time_info {$/;"	s
+set_time_info_once	src/time.c	/^t_time_info	set_time_info_once(t_time_info info)$/;"	f	typeref:typename:t_time_info
+sleeph	routines.c	/^void	sleeph(t_philo *philo)$/;"	f	typeref:typename:void
+sleeph	src/routines.c	/^void	sleeph(t_philo *philo)$/;"	f	typeref:typename:void
+start	inc/t_philo.h	/^	bool			*start;$/;"	m	struct:s_philo	typeref:typename:bool *
+t_philo	inc/t_philo.h	/^}	t_philo;$/;"	t	typeref:struct:s_philo
+t_time_info	inc/t_time_info.h	/^} t_time_info;$/;"	t	typeref:struct:s_time_info
+think	routines.c	/^void	think(t_philo *philo)$/;"	f	typeref:typename:void
+think	src/routines.c	/^void	think(t_philo *philo)$/;"	f	typeref:typename:void
+thread	inc/t_philo.h	/^	pthread_t		thread;$/;"	m	struct:s_philo	typeref:typename:pthread_t
+time_to_die	inc/t_time_info.h	/^	int	time_to_die;$/;"	m	struct:s_time_info	typeref:typename:int
+time_to_eat	inc/t_time_info.h	/^	int	time_to_eat;$/;"	m	struct:s_time_info	typeref:typename:int
+time_to_sleep	inc/t_time_info.h	/^	int	time_to_sleep;$/;"	m	struct:s_time_info	typeref:typename:int
+to_the_power_of	src/ulong_repr.c	/^static unsigned long    to_the_power_of(unsigned long n, unsigned long p)$/;"	f	typeref:typename:unsigned long	file:
+to_the_power_of	ulong_repr/main.c	/^  static unsigned long    to_the_power_of(unsigned long n, unsigned long p)$/;"	f	typeref:typename:unsigned long	file:
+ulong_repr	src/ulong_repr.c	/^char    *ulong_repr(long n, char *buffer, int *len)$/;"	f	typeref:typename:char *
+ulong_repr	ulong_repr/main.c	/^  char    *ulong_repr(long n, char *buffer, int *size)$/;"	f	typeref:typename:char *
+usleep_ms	src/time.c	/^void	usleep_ms(unsigned int time_in_ms, bool death, pthread_mutex_t *death_mtx)$/;"	f	typeref:typename:void
