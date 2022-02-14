@@ -41,7 +41,7 @@ all:			$(NAME)
 
 $(NAME):		${OBJ/OBJECTS}
 				@echo "Linking..."
-				${CC} ${SANITIZER} ${ANALYSER} ${LDFLAGS} ${OBJ/OBJECTS} ${LIBS} -o $@ 
+				${CC} ${LIBS} ${SANITIZER} ${ANALYSER} ${LDFLAGS} ${OBJ/OBJECTS} ${LIBS} -o $@ 
 
 obj/%.o:		src/%.c	${INC/HEADERS} Makefile | obj
 				${CC} ${CFLAGS} ${ANALYSER} -c $< -o $@

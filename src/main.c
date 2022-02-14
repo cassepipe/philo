@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "t_philo.h"
 #include "t_time_info.h"
@@ -43,7 +44,6 @@ void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *mutexe
 	--philosophers;
 	while (i < nb_philo)
 	{
-		// i = 0 <--> philo 1
 		if (i % 2 == 0)
 			philosophers[i] = init_philo(i, start_uneven, &mutexes[0],  &mutexes[i], &mutexes[i + 1]);
 		else
@@ -58,6 +58,25 @@ void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *mutexe
 	/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &mutexes[i], &mutexes[1]);*/
 }
 
+void	loop(t_philo *philosophers, int nb_philo)
+{
+	int i;
+
+	i = 0;
+	while (1)
+	{
+		i = 0;
+		while (i < nb_philo)
+		{
+			if (philosophers[i].dead == true)
+			{
+				return;
+			}
+			i++;
+		}
+	}
+}
+
 int main(int ac, char **av)
 {
 	t_philo			*philosophers;
@@ -67,7 +86,6 @@ int main(int ac, char **av)
 	t_time_info		times;
 	bool			start_even;
 	bool			start_uneven;
-	bool			start_last;
 
 	if (ac != 5 && ac != 6)
 		return (6);
@@ -105,34 +123,24 @@ int main(int ac, char **av)
 
 	start_uneven = 1;
 	/*usleep(get_time_info().time_to_eat * 1000 - 1000);*/
+	usleep(10000);
 	start_even = 1;
 
-	while (1)
-	{
-		i = 1;
-		while (i < nb_philo)
-		{
-			if (philosophers[i].dead == true)
-			{
-				i = 1;
-				while (i < nb_philo)
-				{
-					pthread_detach(philosophers[i].thread);
-					i++;
-				}
-				return (0);
-			}
-			i++;
-		}
-	}
+	loop(philosophers, nb_philo);
 
-	/*i = 1;*/
-	/*while (i < nb_philo)*/
-	/*{*/
-	/*    if (pthread_join(philosophers[i].thread, NULL) != 0)*/
-	/*        return (1);*/
-	/*    i++;*/
-	/*}*/
+	i = 0;
+	while (i < nb_philo)
+	{
+		philosophers[i].dead =  true;
+		i++;
+	}
+	i = 0;
+	while (i < nb_philo)
+	{
+		pthread_join(philosophers[i].thread, NULL);
+		/*pthread_detach(philosophers[i].thread);*/
+		i++;
+	}
 
 	free(philosophers);
 

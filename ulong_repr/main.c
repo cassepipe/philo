@@ -35,24 +35,24 @@
       return (buffer);
   }
 
-#include <unistd.h>
-#include <stdio.h>
+/*#include <unistd.h>*/
+/*#include <stdio.h>*/
 
-int main(int ac, char **av)
-{
-	(void)ac;
-	(void)av;
+/*int main(int ac, char **av)*/
+/*{*/
+/*    (void)ac;*/
+/*    (void)av;*/
 
-	char buffer[256];
-	int size;
-	unsigned long num;
+/*    char buffer[256];*/
+/*    int size;*/
+/*    unsigned long num;*/
 
-	num = 12345678901234567890;
-	ulong_repr(num, buffer, &size);
-	write(STDOUT_FILENO, buffer, size);
-	write(STDOUT_FILENO, "\n", 1);
+/*    num = 12345678901234567890;*/
+/*    ulong_repr(num, buffer, &size);*/
+/*    write(STDOUT_FILENO, buffer, size);*/
+/*    write(STDOUT_FILENO, "\n", 1);*/
 
-	printf("%lu\n", sizeof("Hello"));
+/*    printf("%lu\n", sizeof("Hello"));*/
 
-	return 0;
-}
+/*    return 0;*/
+/*}*/

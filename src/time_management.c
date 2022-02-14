@@ -4,8 +4,10 @@
 #include <sys/time.h>
 
 #include "t_time_info.h"
+#include "t_philo.h"
+#include "defines.h"
 
-#include "time.h"
+#include "time_management.h"
 
 long	gettimeofday_in_ms()
 {
@@ -17,9 +19,8 @@ long	gettimeofday_in_ms()
 	time_in_ms += tv.tv_usec / 1000;
 	return (time_in_ms);
 }
-#define USLEEP_SPLIT	160
 
-void	usleep_ms(unsigned int time_in_ms, bool death, pthread_mutex_t *death_mtx)
+void	usleep_ms(unsigned int time_in_ms, t_philo *philo)
 {
 	unsigned long	time;
 	int				i;
@@ -27,10 +28,8 @@ void	usleep_ms(unsigned int time_in_ms, bool death, pthread_mutex_t *death_mtx)
 	i = 0;
 	time = time_in_ms * 1000 / USLEEP_SPLIT;
 	assert(time < 1000000);
-	while (i < USLEEP_SPLIT && death == false)
+	while (i < USLEEP_SPLIT && philo->dead == false)
 	{
-		if (death == true)
-			pthread_mutex_lock(death_mtx);
 		usleep(time);
 		i++;
 	}

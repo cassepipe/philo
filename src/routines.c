@@ -1,8 +1,9 @@
-#include "t_philo.h"
 #include <threads.h>
-#include "print_philo.h"
-#include "defines.h"
+#include <unistd.h>
 
+#include "t_philo.h"
+
+#include "defines.h"
 #include "routines.h"
 
 void	eat(t_philo *philo)
@@ -21,18 +22,16 @@ void	eat(t_philo *philo)
 		diff = time - last_time_I_ate;
 	else
 		diff = 0;
-	if (diff > get_time_info().time_to_die)
+	if (diff < get_time_info().time_to_die)
+	{
+		last_time_I_ate = time;
+		usleep_ms(get_time_info().time_to_eat, philo);
+	}
+	else if  (philo->dead == false)
 	{
 		philo->dead = true;
-		pthread_mutex_unlock(philo->left_fork);
-		pthread_mutex_unlock(philo->right_fork);
-		pthread_mutex_lock(philo->death_mtx);
-		print_philo(philo, DIE_STR, sizeof(DIE_STR));
-		return ;
+		print_dead_philo(philo, DIE_STR, sizeof(DIE_STR));
 	}
-	else
-		last_time_I_ate = time;
-	usleep_ms(get_time_info().time_to_eat, philo->dead, philo->death_mtx);
 	pthread_mutex_unlock(philo->left_fork);
 	/*printf("%li\tPhilo %i dropped left fork : %hx\n", gettimeofday_in_ms(), philo->id,  philo->left_fork);*/
 	pthread_mutex_unlock(philo->right_fork);
@@ -42,15 +41,14 @@ void	eat(t_philo *philo)
 void	sleeph(t_philo *philo)
 {
 	print_philo(philo, SLEEP_STR, sizeof(SLEEP_STR));
-	usleep_ms(get_time_info().time_to_sleep, philo->dead, philo->death_mtx);
+	usleep_ms(get_time_info().time_to_sleep, philo);
 }
 
 void	think(t_philo *philo)
 {
 	print_philo(philo, THINK_STR, sizeof(THINK_STR));
-	/*usleep(10000);*/
+	usleep(2000);
 }
-
 
 void	*routine(void *arg)
 {
@@ -62,12 +60,12 @@ void	*routine(void *arg)
 	while (philo->dead == false)
 	{
 		eat(philo);
-		check_death(philo->dead, philo->death_mtx);
+		if (philo->dead == true)
+			break;
 		sleeph(philo);
-		check_death(philo->dead, philo->death_mtx);
+		if (philo->dead == true)
+			break;
 		think(philo);
 	}
-	pthread_mutex_lock(philo->death_mtx);
-	/*free(philo);*/
 	return (0);
 }
