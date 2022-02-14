@@ -11,4 +11,7 @@
 
 #define USLEEP_SPLIT	160
 
+#define LOCKED	true
+#define UNLOCKED false
+
 #endif /* DEFINES_H */

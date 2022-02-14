@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 #include "t_philo.h"
+#include "t_fork.h"
 
 #include "defines.h"
 #include "routines.h"
@@ -12,9 +13,9 @@ void	eat(t_philo *philo)
 	long 						time;
 	long						diff;
 
-	pthread_mutex_lock(philo->left_fork);
+	pthread_mutex_lock(&philo->left_fork->fork_mtx);
 	print_philo(philo, FORK1_STR, sizeof(FORK1_STR));
-	pthread_mutex_lock(philo->right_fork);
+	pthread_mutex_lock(&philo->right_fork->fork_mtx);
 	print_philo(philo, FORK2_STR, sizeof(FORK2_STR));
 	time = gettimeofday_in_ms();
 	print_philo(philo, EAT_STR, sizeof(EAT_STR));
@@ -32,9 +33,9 @@ void	eat(t_philo *philo)
 		philo->dead = true;
 		print_dead_philo(philo, DIE_STR, sizeof(DIE_STR));
 	}
-	pthread_mutex_unlock(philo->left_fork);
+	pthread_mutex_unlock(&philo->left_fork->fork_mtx);
 	/*printf("%li\tPhilo %i dropped left fork : %hx\n", gettimeofday_in_ms(), philo->id,  philo->left_fork);*/
-	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(&philo->right_fork->fork_mtx);
 	/*printf("%li\tPhilo %i dropped right fork : %hx\n", gettimeofday_in_ms(), philo->id, philo->right_fork);*/
 }
 

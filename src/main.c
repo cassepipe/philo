@@ -8,10 +8,11 @@
 
 #include "t_philo.h"
 #include "t_time_info.h"
+#include "defines.h"
 
 #include "main.h"
 
-t_philo	init_philo(int id, bool *start, pthread_mutex_t *death_mtx, pthread_mutex_t *left_fork, pthread_mutex_t *right_fork)
+t_philo	init_philo(int id, bool *start, pthread_mutex_t *death_mtx, t_fork *left_fork, t_fork *right_fork)
 {
 	t_philo	philo;
 
@@ -19,42 +20,43 @@ t_philo	init_philo(int id, bool *start, pthread_mutex_t *death_mtx, pthread_mute
 	philo.dead = false;
 	philo.start = start;
 	philo.death_mtx = death_mtx;
-	philo.left_fork = left_fork;
+	philo.left_fork  = left_fork;
 	philo.right_fork = right_fork;
 	return (philo);
 }
 
-void	check_death(bool dead, pthread_mutex_t *death_mtx)
-{
-	if (dead == true)
-		pthread_mutex_lock(death_mtx);
-}
-
-void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *mutexes, bool *start_uneven, bool *start_even)
+void	init_forks(t_fork *forks, int nb_philo)
 {
 	int i;
 
 	i = 0;
 	while (i < nb_philo + 1)
 	{
-		pthread_mutex_init(&mutexes[i], NULL);
+		forks[i].fork_status = false;
+		pthread_mutex_init(&(forks[i].fork_mtx), NULL);
 		i++;
 	}
+}
+
+void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *death_mutex, t_fork *forks, bool *start)
+{
+	int i;
+
 	i = 1;
 	--philosophers;
 	while (i < nb_philo)
 	{
 		if (i % 2 == 0)
-			philosophers[i] = init_philo(i, start_uneven, &mutexes[0],  &mutexes[i], &mutexes[i + 1]);
+			philosophers[i] = init_philo(i, &start[0], death_mutex,  &forks[i], &forks[i + 1]);
 		else
-			philosophers[i] = init_philo(i, start_even, &mutexes[0],  &mutexes[i + 1], &mutexes[i]);
-		/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &mutexes[i], &mutexes[i + 1]);*/
+			philosophers[i] = init_philo(i, &start[1], death_mutex,  &forks[i + 1], &forks[i]);
+		/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &forks[i], &forks[i + 1]);*/
 		i++;
 	}
 	if (i % 2 == 0)
-		philosophers[i] = init_philo(i, start_uneven, &mutexes[0],  &mutexes[1], &mutexes[i]);
+		philosophers[i] = init_philo(i, &start[0], death_mutex,  &forks[1], &forks[i]);
 	else
-		philosophers[i] = init_philo(i, start_even, &mutexes[0],  &mutexes[i], &mutexes[1]);
+		philosophers[i] = init_philo(i, &start[1], death_mutex,  &forks[i], &forks[1]);
 	/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &mutexes[i], &mutexes[1]);*/
 }
 
@@ -80,12 +82,12 @@ void	loop(t_philo *philosophers, int nb_philo)
 int main(int ac, char **av)
 {
 	t_philo			*philosophers;
-	pthread_mutex_t	*mutexes;
+	pthread_mutex_t	*death_mtx;
 	int				i;
 	int				nb_philo;
 	t_time_info		times;
-	bool			start_even;
-	bool			start_uneven;
+	bool			start[2];
+	t_fork			*forks;
 
 	if (ac != 5 && ac != 6)
 		return (6);
@@ -104,13 +106,19 @@ int main(int ac, char **av)
 	if (philosophers == NULL)
 		return (-1);
 
-	mutexes = malloc((nb_philo + 1) * sizeof(pthread_mutex_t));
-	if (mutexes == NULL)
+	death_mtx = malloc(sizeof(pthread_mutex_t));
+	if (death_mtx == NULL)
 		return (-1);
 
-	start_even = 0;
-	start_uneven = 0;
-	init_all_philo(philosophers, nb_philo, mutexes, &start_uneven, &start_even);
+	forks = malloc((nb_philo + 1) * sizeof(t_fork));
+	if (forks == NULL)
+		return (-1);
+
+	init_forks(forks, nb_philo);
+
+	start[0] = 0;
+	start[1] = 0;
+	init_all_philo(philosophers, nb_philo, death_mtx, forks, start);
 
 	i = 0;
 	while (i < nb_philo)
@@ -121,10 +129,10 @@ int main(int ac, char **av)
 		i++;
 	}
 
-	start_uneven = 1;
+	start[0] = 1;
 	/*usleep(get_time_info().time_to_eat * 1000 - 1000);*/
 	usleep(10000);
-	start_even = 1;
+	start[1] = 1;
 
 	loop(philosophers, nb_philo);
 
@@ -147,11 +155,12 @@ int main(int ac, char **av)
 	i = 0;
 	while (i < nb_philo)
 	{
-		pthread_mutex_destroy(&mutexes[i]);
+		pthread_mutex_destroy(&forks[i].fork_mtx);
 		i++;
 	}
 
-	free(mutexes);
+	free(forks);
+	free(death_mtx);
 
 	return (0);
 }
