@@ -7,16 +7,55 @@
 #include "defines.h"
 #include "routines.h"
 
+bool	take_fork(t_philo *philo, t_fork *fork)
+{
+	pthread_mutex_lock(&fork->fork_mtx);
+	if (fork->fork_status == UNLOCKED)
+	{
+		fork->fork_status = LOCKED;
+		print_philo(philo, FORK_STR, sizeof(FORK_STR));
+		pthread_mutex_unlock(&fork->fork_mtx);
+		return (true);
+	}
+	pthread_mutex_unlock(&fork->fork_mtx);
+	return false;
+}
+
+void	put_down_fork(t_fork *fork)
+{
+		pthread_mutex_lock(&fork->fork_mtx);
+		fork->fork_status = UNLOCKED;
+		pthread_mutex_unlock(&fork->fork_mtx);
+}
+
+void	put_down_both_forks(t_fork *fork1, t_fork *fork2)
+{
+	put_down_fork(fork1);
+	put_down_fork(fork2);
+}
+
 void	eat(t_philo *philo)
 {
 	static thread_local long	last_time_I_ate;
 	long 						time;
 	long						diff;
 
-	pthread_mutex_lock(&philo->left_fork->fork_mtx);
-	print_philo(philo, FORK1_STR, sizeof(FORK1_STR));
-	pthread_mutex_lock(&philo->right_fork->fork_mtx);
-	print_philo(philo, FORK2_STR, sizeof(FORK2_STR));
+	while (1)
+	{
+		if (take_fork(philo, philo->left_fork) == false)
+		{
+			usleep(500);
+			continue;
+		}
+		if (take_fork(philo, philo->right_fork) == false)
+		{
+			put_down_fork(philo->left_fork);
+			usleep(500);
+			continue;
+		}
+		break;
+	}
+
 	time = gettimeofday_in_ms();
 	print_philo(philo, EAT_STR, sizeof(EAT_STR));
 	if (last_time_I_ate != 0)
@@ -33,9 +72,8 @@ void	eat(t_philo *philo)
 		philo->dead = true;
 		print_dead_philo(philo, DIE_STR, sizeof(DIE_STR));
 	}
-	pthread_mutex_unlock(&philo->left_fork->fork_mtx);
+	put_down_both_forks(philo->left_fork, philo->right_fork);
 	/*printf("%li\tPhilo %i dropped left fork : %hx\n", gettimeofday_in_ms(), philo->id,  philo->left_fork);*/
-	pthread_mutex_unlock(&philo->right_fork->fork_mtx);
 	/*printf("%li\tPhilo %i dropped right fork : %hx\n", gettimeofday_in_ms(), philo->id, philo->right_fork);*/
 }
 
@@ -48,7 +86,7 @@ void	sleeph(t_philo *philo)
 void	think(t_philo *philo)
 {
 	print_philo(philo, THINK_STR, sizeof(THINK_STR));
-	usleep(2000);
+	usleep(500);
 }
 
 void	*routine(void *arg)

@@ -32,7 +32,7 @@ void	init_forks(t_fork *forks, int nb_philo)
 	i = 0;
 	while (i < nb_philo + 1)
 	{
-		forks[i].fork_status = false;
+		forks[i].fork_status = UNLOCKED;
 		pthread_mutex_init(&(forks[i].fork_mtx), NULL);
 		i++;
 	}
@@ -50,14 +50,14 @@ void	init_all_philo(t_philo *philosophers, int nb_philo, pthread_mutex_t *death_
 			philosophers[i] = init_philo(i, &start[0], death_mutex,  &forks[i], &forks[i + 1]);
 		else
 			philosophers[i] = init_philo(i, &start[1], death_mutex,  &forks[i + 1], &forks[i]);
-		/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &forks[i], &forks[i + 1]);*/
+		printf("Created philo %i with left fork %hx and right fork %hx\n", i, &forks[i], &forks[i + 1]);
 		i++;
 	}
 	if (i % 2 == 0)
 		philosophers[i] = init_philo(i, &start[0], death_mutex,  &forks[1], &forks[i]);
 	else
 		philosophers[i] = init_philo(i, &start[1], death_mutex,  &forks[i], &forks[1]);
-	/*printf("Created philo %i with left fork %hx and right fork %hx\n", i, &mutexes[i], &mutexes[1]);*/
+	printf("Created philo %i with left fork %hx and right fork %hx\n", i, &forks[i], &forks[1]);
 }
 
 void	loop(t_philo *philosophers, int nb_philo)

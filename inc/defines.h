@@ -2,6 +2,7 @@
 #define DEFINES_H
 
 
+#define FORK_STR " has taken a fork\n"
 #define FORK1_STR " has taken a fork (1/2)\n"
 #define FORK2_STR " has taken a fork (2/2)\n"
 #define DIE_STR " has died\n"

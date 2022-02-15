@@ -19,8 +19,8 @@ void	print_philo(const t_philo *philo, const char *action, int act_sz)
 		memcpy(buffer + len, " Philo ", sizeof(" Philo ") - 1);
 		len += sizeof(" Philo ") - 1;
 		ulong_repr(philo->id, buffer + len, &len);
-		memcpy(buffer + len, action, act_sz);
-		len += act_sz;
+		memcpy(buffer + len, action, act_sz - 1);
+		len += act_sz - 1;
 		pthread_mutex_lock(philo->death_mtx);
 		if (philo->dead == false)
 			write(STDOUT_FILENO, buffer, len);
@@ -38,8 +38,8 @@ void	print_dead_philo(const t_philo *philo, const char *action, int act_sz)
 	memcpy(buffer + len, " Philo ", sizeof(" Philo ") - 1);
 	len += sizeof(" Philo ") - 1;
 	ulong_repr(philo->id, buffer + len, &len);
-	memcpy(buffer + len, action, act_sz);
-	len += act_sz;
+	memcpy(buffer + len, action, act_sz - 1);
+	len += act_sz - 1;
 	pthread_mutex_lock(philo->death_mtx);
 	write(STDOUT_FILENO, buffer, len);
 	pthread_mutex_unlock(philo->death_mtx);
@@ -55,8 +55,8 @@ void	print_philo_death(const t_philo *philo)
 	memcpy(buffer + len, " Philo ", sizeof(" Philo ") - 1);
 	len += sizeof(" Philo ") - 1;
 	ulong_repr(philo->id, buffer + len, &len);
-	memcpy(buffer + len, DIE_STR, sizeof(DIE_STR));
-	len += sizeof(DIE_STR);
+	memcpy(buffer + len, DIE_STR, sizeof(DIE_STR) - 1);
+	len += sizeof(DIE_STR) - 1;
 	pthread_mutex_lock(philo->death_mtx);
 	write(STDOUT_FILENO, buffer, len);
 	pthread_mutex_unlock(philo->death_mtx);
